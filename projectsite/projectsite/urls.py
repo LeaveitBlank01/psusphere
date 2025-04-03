@@ -5,12 +5,19 @@ from studentorg.views import (
     OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, 
     StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, 
     ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, 
-    OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView
+    OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
+    CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,  # ✅ Added College Views
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomePageView.as_view(), name='home'),
+
+    # ✅ College URLs
+    path('college_list', CollegeList.as_view(), name='college-list'),
+    path('college_list/add', CollegeCreateView.as_view(), name='college-add'),
+    path('college_list/<pk>/', CollegeUpdateView.as_view(), name='college-edit'),
+    path('college_list/<pk>/delete', CollegeDeleteView.as_view(), name='college-delete'),
 
     # Organization URLs
     path('organization_list', OrganizationList.as_view(), name='organization-list'),
@@ -30,7 +37,7 @@ urlpatterns = [
     path('program_list/<pk>/', ProgramUpdateView.as_view(), name='prog-update'),
     path('program_list/<pk>/delete', ProgramDeleteView.as_view(), name='prog-delete'),
 
-    # ✅ OrgMember URLs (Fixing your error)
+    # OrgMember URLs
     path('orgmember_list', OrgMemberList.as_view(), name='orgmember-list'),
     path('orgmember_list/add', OrgMemberCreateView.as_view(), name='orgmember-add'),
     path('orgmember_list/<pk>/', OrgMemberUpdateView.as_view(), name='orgmember-edit'),
