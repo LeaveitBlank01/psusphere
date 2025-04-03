@@ -1,0 +1,28 @@
+### OrgMember_del.html
+{% extends 'base.html' %} {% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Delete Organization Member</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Confirm Deletion</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <form method="post">
+                                <p>Are you sure you want to delete "{{ object }}"?</p>
+                                {% csrf_token %} {% include 'includes/form.html' %}
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-danger btn-rounded">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
