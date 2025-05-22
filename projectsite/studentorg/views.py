@@ -9,6 +9,8 @@ from studentorg.forms import CollegeForm, OrganizationForm, StudentForm, Program
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.views.generic import TemplateView
 
 @method_decorator(login_required, name='dispatch')
 class HomePageView(ListView):
@@ -145,3 +147,40 @@ class OrgMemberDeleteView(DeleteView):
     model = OrgMember
     template_name = 'orgmember_del.html'
     success_url = reverse_lazy('orgmember-list')
+
+
+class AnalyticsDashboardView(TemplateView):
+    template_name = 'charts_dashboard.html' # This view will render the charts_dashboard.html template
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        program_data = Program.objects.annotate(
+            student_count=Count('student')
+        ).order_by('prog_name') # Order by program name for consistent chart display
+
+        # Prepare labels (program names) and data (student counts) for Chart.js
+        program_labels = [p.prog_name for p in program_data]
+        program_student_counts = [p.student_count for p in program_data]
+
+        # Add this data to the context, which will be available in the template
+        context['program_labels'] = program_labels
+        context['program_student_counts'] = program_student_counts
+
+        # --- Data for Organizations per College Chart ---
+        # Query to get the count of organizations for each college.
+        # It annotates each College object with an 'organization_count' field.
+        college_data = College.objects.annotate(
+            organization_count=Count('organization')
+        ).order_by('college_name') # Order by college name
+
+        # Prepare labels (college names) and data (organization counts) for Chart.js
+        college_labels = [c.college_name for c in college_data]
+        college_org_counts = [c.organization_count for c in college_data]
+
+        # Add this data to the context
+        context['college_labels'] = college_labels
+        context['college_org_counts'] = college_org_counts
+
+
+        return context

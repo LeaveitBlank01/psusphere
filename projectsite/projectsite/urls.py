@@ -7,7 +7,7 @@ from studentorg.views import (
     StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, 
     ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, 
     OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
-    CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,  # ✅ Added College Views
+    CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, AnalyticsDashboardView,
 )
 
 urlpatterns = [
@@ -48,4 +48,6 @@ urlpatterns = [
     re_path(r'login/$', auth_views.LoginView.as_view(
         template_name='login.html'), name='login'),
     re_path(r'logout/$', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('analytics_dashboard/', AnalyticsDashboardView.as_view(), name='analytics-dashboard'),
 ]

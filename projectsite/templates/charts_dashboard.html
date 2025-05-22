@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Charts Dashboard - PSUSphere{% endblock %}
+
+{% block content %}
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+            <h4 class="page-title">Analytics Dashboard</h4>
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Students per Program</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="studentsPerProgramChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Organizations per College</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="organizationsPerCollegeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ program_labels|json_script:"program_labels_data" }}
+{{ program_student_counts|json_script:"program_student_counts_data" }}
+{{ college_labels|json_script:"college_labels_data" }}
+{{ college_org_counts|json_script:"college_org_counts_data" }}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var programLabels = JSON.parse(document.getElementById('program_labels_data').textContent);
+        var programStudentCounts = JSON.parse(document.getElementById('program_student_counts_data').textContent);
+
+        var studentsPerProgramCtx = document.getElementById('studentsPerProgramChart').getContext('2d');
+        var studentsPerProgramChart = new Chart(studentsPerProgramCtx, {
+            type: 'pie',
+            data: {
+                labels: programLabels,
+                datasets: [{
+                    label: 'Number of Students',
+                    data: programStudentCounts,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(201, 203, 207, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(201, 203, 207, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0 
+                        }
+                    }
+                }
+            }
+        });
+        var collegeLabels = JSON.parse(document.getElementById('college_labels_data').textContent);
+        var collegeOrgCounts = JSON.parse(document.getElementById('college_org_counts_data').textContent);
+
+        var organizationsPerCollegeCtx = document.getElementById('organizationsPerCollegeChart').getContext('2d');
+        var organizationsPerCollegeChart = new Chart(organizationsPerCollegeCtx, {
+            type: 'line',
+            data: {
+                labels: collegeLabels,
+                datasets: [{
+                    label: 'Number of Organizations',
+                    data: collegeOrgCounts,
+                    backgroundColor: [
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(201, 203, 207, 0.6)',
+                        'rgba(255, 206, 86, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(201, 203, 207, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+    });
+</script>
+{% endblock %}
